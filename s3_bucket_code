@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation Template to create an S3 bucket'
+
+Resources:
+  MyS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 'your-unique-bucket-name'  # Specify your globally unique bucket name
+      AccessControl: 'Private'  # Set the access control policy (private, public-read, etc.)
+      VersioningConfiguration:
+        Status: 'Enabled'  # Enable versioning (optional)
+      LoggingConfiguration:
+        DestinationBucketName: 'your-logging-bucket'  # A different bucket to store logs (optional)
+        LogFilePrefix: 'logs/'  # Optional prefix for log files
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'ExpireOldVersions'
+            Status: 'Enabled'
+            Prefix: ''  # Apply to all objects
+            ExpirationInDays: 365  # Expire objects after 1 year
+      WebsiteConfiguration:
+        IndexDocument: 'index.html'  # For static website hosting (optional)
+        ErrorDocument: 'error.html'  # For static website hosting (optional)
+
+Outputs:
+  BucketName:
+    Description: 'The name of the S3 bucket created'
+    Value: !Ref MyS3Bucket
+
+  BucketArn:
+    Description: 'The ARN of the S3 bucket created'
+    Value: !GetAtt MyS3Bucket.Arn
+
